@@ -30,7 +30,7 @@ class BMKG
     
     private function latlon()
     {
-		$lokasi = array(
+		$location = array(
             "Banda_Aceh" => array(
                 "lat" => 5.5482904,
                 "lon" => 95.3237559
@@ -184,13 +184,13 @@ class BMKG
                 "lon" => 112.7520883
             )
         );
-		return $lokasi;
+		return $location;
     }
     
     function weather()
     {
         $data = $this->remote_data('cuaca/prakiraan-cuaca-indonesia.bmkg');
-        $lokasi = $this->latlon();
+        $location = $this->latlon();
         $result = array();
         if($data == "offline")
 		{
@@ -204,7 +204,6 @@ class BMKG
             $result['view']       = "weather";
 			$result['timestamp']  = time();
             $html                 = str_get_html($data);
-			
 			if(stripos($html, 'TabPaneCuaca1') === false && stripos($html, 'TabPaneCuaca2') === false && stripos($html, 'TabPaneCuaca3') === false)
 			{
 				$result['status']     = "error";
@@ -212,10 +211,7 @@ class BMKG
 				$result['timestamp']  = time();
 				return $result;
 			}
-			
 			$result['data']       = array();
-			
-			
 			$buff                 = array();
 			$table                = array();
 			$idx                  = 0;
@@ -285,7 +281,6 @@ class BMKG
 						array('morning', 'daylight', 'afternoon', 'night', 'dawn'), 
 						strtolower(str_replace(" ", "_", trim($val->innertext))));
 				}
-				
 				for($day = 0; $day < $idx; $day++)
 				{
 					$collection = array();
@@ -293,13 +288,13 @@ class BMKG
 					$collection['data'] = array();
 					foreach ($table[$day]->find('tr') as $i=>$tr) 
 					{
-						if ($i > 1) 
+						if($i > 1) 
 						{
 							$city = trim(strip_tags(@$tr->find('td', 0)->innertext, " \r\n\t "));
 							if(strlen($city) > 1)
 							{
 								$weather = array();
-								for($xx = 0; $xx<$nweather; $xx++)
+								for($xx = 0; $xx < $nweather; $xx++)
 								{
 									$weather[$weather_time[$xx]] = strip_tags(@$tr->find('td', $xx+1)->innertext);
 								}
@@ -307,10 +302,9 @@ class BMKG
 								$temperature_minmax       = explode(" - ", @$temperature);
 								$humidity        = @$tr->find('td', $ndata-1)->innertext;
 								$humidity_minmax = explode(" - ", @$humidity);
-								
 								$cells            = array(
 									'city' => $city,
-									'coordinate'=> @$lokasi[str_replace(" ", "_", $city)],
+									'coordinate'=> @$location[str_replace(" ", "_", $city)],
 									'weather' => @$weather,
 									'temperature' => array(
 										'min' => strip_tags(@$temperature_minmax[0])*1,
@@ -393,16 +387,12 @@ class BMKG
 			{
 			}
         }
-        
         return $result;
     }
-
     function earthquake_hidden()
     {
         $data = $this->remote_data('gempabumi/gempabumi-dirasakan.bmkg');
-        
         $result = array();
-        
         if ($data == "offline") 
 		{
             $result['status']     = "error";
@@ -415,7 +405,6 @@ class BMKG
             $result['view']       = "earthquake";
 			$result['timestamp']  = time();
             $html                 = str_get_html($data);
-			
 			if(stripos($html, '<table class="table table-hover table-striped">') === false)
 			{
 				$result['status']     = "error";
@@ -429,9 +418,10 @@ class BMKG
             $i = 0;
 			try
 			{
-				foreach ($table->find('tr') as $tr) {
-					if ($i != 0) {
-						
+				foreach ($table->find('tr') as $tr)
+				{
+					if ($i != 0)
+					{
 						$datetime           = str_replace("/", "-", $tr->find('td', 1)->innertext);
 						$datetime           = substr($datetime, 0, 10)." ".substr($datetime, 10);
 						$coords             = $tr->find('td', 2)->innertext;
@@ -444,7 +434,6 @@ class BMKG
 						$lon                = strip_tags($latitude_longitude[1])*1;
 						if(stripos($coords, "LS") !== false) $lat = $lat * -1;
 						if(stripos($coords, "BB") !== false) $lon = $lon * -1;
-						
 						$cells = array(
 							'time' => strip_tags($datetime),
 							'coordinate'=>array(
