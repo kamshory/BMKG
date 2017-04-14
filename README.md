@@ -28,7 +28,7 @@ echo json_encode($data, JSON_PRETTY_PRINT);
 #### Weather
 
 ```php
-$province_id = $_GET['province_id'];
+$province_id = substr(trim(strip_tags(@$_GET['province_id'])), 0, 2);
 require('lib/bmkg.php');
 
 $bmkg = new BMKG();
