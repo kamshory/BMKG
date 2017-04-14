@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 require('simple_html_dom.php');
 
 class BMKG
@@ -27,159 +28,273 @@ class BMKG
             return utf8_decode($html);
         }
     }
-    
+    public function province_list()
+	{
+		$list = array(
+		"01"=>array("Aceh","Aceh"),								
+		"02"=>array("Bali","Bali"),								
+		"03"=>array("Bangka Belitung","Bangka Belitung"),								
+		"04"=>array("Banten","Banten"),								
+		"05"=>array("Bengkulu","Bengkulu"),								
+		"06"=>array("DI Yogyakarta","DI Yogyakarta"),								
+		"07"=>array("DKI Jakarta","DKI Jakarta"),								
+		"08"=>array("Gorontalo","Gorontalo"),								
+		"09"=>array("Jambi","Jambi"),								
+		"10"=>array("Jawa Barat","Jawa Barat"),								
+		"11"=>array("Jawa Tengah","Jawa Tengah"),								
+		"12"=>array("Jawa Timur","Jawa Timur"),								
+		"13"=>array("Kalimantan Barat","Kalimantan Barat"),								
+		"14"=>array("Kalimantan Selatan","Kalimantan Selatan"),								
+		"15"=>array("Kalimantan Tengah","Kalimantan Tengah"),								
+		"16"=>array("Kalimantan Timur","Kalimantan Timur"),								
+		"17"=>array("Kalimantan Utara","Kalimantan Utara"),								
+		"18"=>array("Kepulauan Riau","Kepulauan Riau"),								
+		"19"=>array("Lampung","Lampung"),								
+		"20"=>array("Maluku","Maluku"),								
+		"21"=>array("Maluku Utara","Maluku Utara"),								
+		"22"=>array("Nusa Tenggara Barat","Nusa Tenggara Barat"),								
+		"23"=>array("Nusa Tenggara Timur","Nusa Tenggara Timur"),								
+		"24"=>array("Papua","Papua"),								
+		"25"=>array("Papua Barat","Papua Barat"),								
+		"26"=>array("Riau","Riau"),								
+		"27"=>array("Sulawesi Barat","Sulawesi Barat"),								
+		"28"=>array("Sulawesi Selatan","Sulawesi Selatan"),								
+		"29"=>array("Sulawesi Tengah","Sulawesi Tengah"),								
+		"30"=>array("Sulawesi Tenggara","Sulawesi Tenggara"),								
+		"31"=>array("Sulawesi Utara","Sulawesi Utara"),								
+		"32"=>array("Sumatera Barat","Sumatera Barat"),								
+		"33"=>array("Sumatera Selatan","Sumatera Selatan"),								
+		"34"=>array("Sumatera Utara","Sumatera Utara"),								
+		"35"=>array("Indonesia","Indonesia")							  
+		);
+		$ret = array();
+		foreach($list as $key=>$val)
+		{
+			$ret[$key] = $val[0];
+		}
+		return $ret;
+	}
+	public function big_city_list()
+	{
+		$list = $this->province_list();
+		$location = $this->latlon();
+		$ret = array();
+		foreach($list as $key=>$val)
+		{
+			$ret[$key] = array();
+			$ret[$key]["level"] = 1;
+			$ret[$key]["id"] = $key;
+			$ret[$key]["name"] = $val;
+			$ret[$key]["city"] = array();
+			$found = false;
+			foreach($location as $k=>$v)
+			{
+				if($v["id"] == $key)
+				{
+					$v["level"] = 2;
+					$v["name"] = str_replace("_", " ", $k);
+					unset($v["id"]);
+					$ret[$key]["city"][] = $v;
+					$found = true;
+				}
+			}
+			if(!$found)
+			{
+				unset($ret[$key]);
+			}
+		}
+		return $ret;
+	}
     private function latlon()
     {
 		$location = array(
             "Banda_Aceh" => array(
+				"id"=>"01",
                 "lat" => 5.5482904,
                 "lon" => 95.3237559
             ),
             "Medan" => array(
+				"id"=>"34",
                 "lat" => 3.5951956,
                 "lon" => 98.6722227
             ),
             "Pekanbaru" => array(
+				"id"=>"26",
                 "lat" => 0.5070677,
                 "lon" => 101.4477793
             ),
             "Batam" => array(
+				"id"=>"18",
                 "lat" => 1.0456264,
                 "lon" => 104.0304535
             ),
             "Padang" => array(
+				"id"=>"32",
                 "lat" => -0.9470832,
                 "lon" => 100.417181
             ),
             "Jambi" => array(
+				"id"=>"09",
                 "lat" => -1.6101229,
                 "lon" => 103.6131203
             ),
             "Palembang" => array(
+				"id"=>"33",
                 "lat" => -2.9760735,
                 "lon" => 104.7754307
             ),
             "Pangkal_Pinang" => array(
+				"id"=>"03",
                 "lat" => -2.1316266,
                 "lon" => 106.1169299
             ),
             "Bengkulu" => array(
+				"id"=>"05",
                 "lat" => -3.7928451,
                 "lon" => 102.2607641
             ),
             "Bandar_Lampung" => array(
+				"id"=>"19",
                 "lat" => -5.3971396,
                 "lon" => 105.2667887
             ),
             "Pontianak" => array(
+				"id"=>"13",
                 "lat" => -0.0263303,
                 "lon" => 109.3425039
             ),
             "Samarinda" => array(
+				"id"=>"16",
                 "lat" => -0.4948232,
                 "lon" => 117.1436154
             ),
             "Palangkaraya" => array(
+				"id"=>"15",
                 "lat" => -2.2161048,
                 "lon" => 113.913977
             ),
             "Banjarmasin" => array(
+				"id"=>"14",
                 "lat" => -3.3186067,
                 "lon" => 114.5943784
             ),
             "Manado" => array(
+				"id"=>"31",
                 "lat" => 1.4748305,
                 "lon" => 124.8420794
             ),
             "Gorontalo" => array(
+				"id"=>"08",
                 "lat" => 0.5435442,
                 "lon" => 123.0567693
             ),
             "Palu" => array(
+				"id"=>"29",
                 "lat" => -0.9002915,
                 "lon" => 119.8779987
             ),
             "Kendari" => array(
+				"id"=>"30",
                 "lat" => -3.9984597,
                 "lon" => 122.5129742
             ),
             "Makassar" => array(
+				"id"=>"28",
                 "lat" => -5.1476651,
                 "lon" => 119.4327314
             ),
             "Majene" => array(
+				"id"=>"27",
                 "lat" => -3.0297251,
                 "lon" => 118.9062794
             ),
             "Ternate" => array(
+				"id"=>"21",
                 "lat" => 0.7898868,
                 "lon" => 127.3753792
             ),
             "Ambon" => array(
+				"id"=>"20",
                 "lat" => -3.6553932,
                 "lon" => 128.1907723
             ),
             "Jayapura" => array(
+				"id"=>"24",
                 "lat" => -2.5916025,
                 "lon" => 140.6689995
             ),
             "Sorong" => array(
+				"id"=>"25",
                 "lat" => -0.8819986,
                 "lon" => 131.2954834
             ),
             "Biak" => array(
+				"id"=>"24",
                 "lat" => -1.0381022,
                 "lon" => 135.9800848
             ),
             "Manokwari" => array(
+				"id"=>"25",
                 "lat" => -0.8614531,
                 "lon" => 134.0620421
             ),
             "Merauke" => array(
+				"id"=>"24",
                 "lat" => -8.4991117,
                 "lon" => 140.4049814
             ),
             "Kupang" => array(
+				"id"=>"23",
                 "lat" => -10.1771997,
                 "lon" => 123.6070329
             ),
             "Sumbawa_Besar" => array(
+				"id"=>"22",
                 "lat" => -8.504043,
                 "lon" => 117.428497
             ),
             "Mataram" => array(
+				"id"=>"22",
                 "lat" => -8.5769951,
                 "lon" => 116.1004894
             ),
             "Denpasar" => array(
+				"id"=>"02",
                 "lat" => -8.6704582,
                 "lon" => 115.2126293
             ),
             "Jakarta" => array(
+				"id"=>"07",
                 "lat" => -6.2087634,
                 "lon" => 106.845599
             ),
             "Jakarta_Pusat" => array(
+				"id"=>"07",
                 "lat" => -6.2087634,
                 "lon" => 106.845599
             ),
             "Serang" => array(
+				"id"=>"04",
                 "lat" => -6.1103661,
                 "lon" => 106.1639749
             ),
             "Bandung" => array(
+				"id"=>"10",
                 "lat" => -6.9174639,
                 "lon" => 107.6191228
             ),
             "Semarang" => array(
+				"id"=>"11",
                 "lat" => -7.0051453,
                 "lon" => 110.4381254
             ),
             "Yogyakarta" => array(
+				"id"=>"06",
                 "lat" => -7.7955798,
                 "lon" => 110.3694896
             ),
             "Surabaya" => array(
+				"id"=>"12",
                 "lat" => -7.2574719,
                 "lon" => 112.7520883
             )
@@ -187,9 +302,14 @@ class BMKG
 		return $location;
     }
     
-    function weather()
+    function weather($prov = null)
     {
-        $data = $this->remote_data('cuaca/prakiraan-cuaca-indonesia.bmkg');
+		$url = 'cuaca/prakiraan-cuaca-indonesia.bmkg';
+		if($prov !== null && $prov != "")
+		{
+			$url .= "?Prov=$prov";
+		}
+        $data = $this->remote_data($url);
         $location = $this->latlon();
         $result = array();
         if($data == "offline")
