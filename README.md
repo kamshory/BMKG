@@ -41,41 +41,42 @@ echo json_encode($data, JSON_PRETTY_PRINT);
 ?>
 
 Province ID is a string contain ID of the province and listed bellow:
-01 = Aceh
-02 = Bali
-03 = Bangka Belitung
-04 = Banten
-05 = Bengkulu
-06 = DI Yogyakarta
-07 = DKI Jakarta
-08 = Gorontalo
-09 = Jambi
-10 = Jawa Barat
-11 = Jawa Tengah
-12 = Jawa Timur
-13 = Kalimantan Barat
-14 = Kalimantan Selatan
-15 = Kalimantan Tengah
-16 = Kalimantan Timur
-17 = Kalimantan Utara
-18 = Kepulauan Riau
-19 = Lampung
-20 = Maluku
-21 = Maluku Utara
-22 = Nusa Tenggara Barat
-23 = Nusa Tenggara Timur
-24 = Papua
-25 = Papua Barat
-26 = Riau
-27 = Sulawesi Barat
-28 = Sulawesi Selatan
-29 = Sulawesi Tengah
-30 = Sulawesi Tenggara
-31 = Sulawesi Utara
-32 = Sumatera Barat
-33 = Sumatera Selatan
-34 = Sumatera Utara
-35 = Indonesia
+
+- 01 = Aceh
+- 02 = Bali
+- 03 = Bangka Belitung
+- 04 = Banten
+- 05 = Bengkulu
+- 06 = DI Yogyakarta
+- 07 = DKI Jakarta
+- 08 = Gorontalo
+- 09 = Jambi
+- 10 = Jawa Barat
+- 11 = Jawa Tengah
+- 12 = Jawa Timur
+- 13 = Kalimantan Barat
+- 14 = Kalimantan Selatan
+- 15 = Kalimantan Tengah
+- 16 = Kalimantan Timur
+- 17 = Kalimantan Utara
+- 18 = Kepulauan Riau
+- 19 = Lampung
+- 20 = Maluku
+- 21 = Maluku Utara
+- 22 = Nusa Tenggara Barat
+- 23 = Nusa Tenggara Timur
+- 24 = Papua
+- 25 = Papua Barat
+- 26 = Riau
+- 27 = Sulawesi Barat
+- 28 = Sulawesi Selatan
+- 29 = Sulawesi Tengah
+- 30 = Sulawesi Tenggara
+- 31 = Sulawesi Utara
+- 32 = Sumatera Barat
+- 33 = Sumatera Selatan
+- 34 = Sumatera Utara
+- 35 = Indonesia
 
 If province ID is provided, API will show data of big cities in selected province.
 
