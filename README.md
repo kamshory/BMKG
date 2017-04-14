@@ -13,7 +13,7 @@ Each APIs return output as JSON format
 
 #### Earthquake
 
-<?php
+```php
 require('lib/bmkg.php');
 
 $bmkg = new BMKG();
@@ -23,11 +23,11 @@ $data = $bmkg->earthquake();
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 echo json_encode($data, JSON_PRETTY_PRINT);
-?>
+```
 
 #### Weather
 
-<?php
+```php
 $province_id = $_GET['province_id'];
 require('lib/bmkg.php');
 
@@ -38,7 +38,7 @@ $data = $bmkg->weather($province_id);
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 echo json_encode($data, JSON_PRETTY_PRINT);
-?>
+```
 
 Province ID is a string contain ID of the province and listed bellow:
 
