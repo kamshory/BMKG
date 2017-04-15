@@ -78,7 +78,7 @@ Province ID is a string contain ID of the province and listed bellow:
 - 34 = Sumatera Utara
 - 35 = Indonesia
 
-If province ID is provided, API will show data of big cities in selected province.
+If province ID is provided, API will show data of cities in selected province.
 
 If province ID is not provided, API will show data of big cities in Indonesia.
 
