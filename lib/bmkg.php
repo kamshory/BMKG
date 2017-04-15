@@ -4,13 +4,11 @@ require('simple_html_dom.php');
 
 class BMKG
 {
-    
     function __construct()
     {
         $this->user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0.1) Gecko/20100101 Firefox/52.0.1';
         $this->url        = 'http://www.bmkg.go.id/';
     }
-    
     private function remote_data($get)
     {
         $ch = curl_init();
@@ -394,12 +392,65 @@ class BMKG
 				$nweather = count($table[0]->find('tr', 2)->find('td')) - 3;
 				$ndata = count($table[0]->find('tr', 2)->find('td'));
 				$weather_time = array();
-				foreach($table[0]->find('tr', 1)->find('th') as $key=>$val)
+				if($ndata != 0)
 				{
-					$weather_time[] = str_replace(
-						array('pagi', 'siang', 'sore', 'malam', 'dini_hari'), 
-						array('morning', 'daylight', 'afternoon', 'night', 'dawn'), 
-						strtolower(str_replace(" ", "_", trim($val->innertext))));
+					foreach($table[0]->find('tr', 1)->find('th') as $key=>$val)
+					{
+						$weather_time[] = str_replace(
+							array('pagi', 'siang', 'sore', 'malam', 'dini_hari'), 
+							array('morning', 'daylight', 'afternoon', 'night', 'dawn'), 
+							strtolower(str_replace(" ", "_", trim($val->innertext))));
+						if(@$weather_time[$key] == "")
+						{
+							$weather_time[$key] = "weather".$key;
+						}
+					}
+					if(isset($weather_time))
+					{
+						if(is_array($weather_time))
+						{
+							foreach($weather_time as $k=>$v)
+							{
+								if(@$weather_time[$k] == "")
+								{
+									$weather_time[$key] = "weather".$k;
+								}
+							}
+						}
+						else
+						{
+							$weather_time = array();
+							$weather_time[0] = "weather0";
+						}
+					}
+					else
+					{
+						$weather_time = array();
+						$weather_time[0] = "weather0";
+					}
+				}
+				else
+				{
+					$nw = -2;
+					foreach($table[0]->find('tr', 1)->find('th') as $key=>$val)
+					{
+						$nw++;
+					}
+					$weather_time = array();
+					
+					$cw[0] = "morning";
+					$cw[1] = "daylight";
+					$cw[2] = "afternoon";
+					$cw[3] = "night";
+					$cw[4] = "dawn";
+					
+					
+					$nweather = $nw;
+					for($i = 0, $j=count($cw)-$nw; $i<$nw; $i++, $j++)
+					{
+						$weather_time[$i] = $cw[$j];
+					}
+
 				}
 				for($day = 0; $day < $idx; $day++)
 				{
@@ -472,8 +523,6 @@ class BMKG
 				$result['timestamp']  = time();
 				return $result;
 			}
-			//$content              = $html->find('div[class="container content"]', 0);
-            //$table                = $content->find('table', 0);
 			$table                = $html->find('table[class="table-hover"]', 0);
             $i = 0;
 			try
@@ -532,8 +581,6 @@ class BMKG
 				$result['timestamp']  = time();
 				return $result;
 			}
-			//$content              = $html->find('div[class="container content"]', 0);
-            //$table                = $content->find('table', 0);
 			$table                = $html->find('table[class="table-hover"]', 0);
             $i = 0;
 			try
