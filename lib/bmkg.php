@@ -389,74 +389,114 @@ class BMKG
 			try
 			{
 				$date = array(date('Y-m-d'), date('Y-m-d', strtotime('+1 day')), date('Y-m-d', strtotime('+2 day')));
-				$nweather = count($table[0]->find('tr', 2)->find('td')) - 3;
-				$ndata = count($table[0]->find('tr', 2)->find('td'));
+				
+				$nweather = array();
 				$weather_time = array();
-				if($ndata != 0)
+				$ndata = array();
+				
+				for($day = 0; $day < $idx; $day++)
 				{
-					foreach($table[0]->find('tr', 1)->find('th') as $key=>$val)
+					$tbl = $table[$day];
+					$nweather[$day] = count($tbl->find('tr', 2)->find('td')) - 3;
+					if($nweather[$day] < 0)
 					{
-						$weather_time[] = str_replace(
-							array('pagi', 'siang', 'sore', 'malam', 'dini_hari'), 
-							array('morning', 'daylight', 'afternoon', 'night', 'dawn'), 
-							strtolower(str_replace(" ", "_", trim($val->innertext))));
-						if(@$weather_time[$key] == "")
-						{
-							$weather_time[$key] = "weather".$key;
-						}
+						$nweather[$day] = count($tbl->find('tr', 2)->find('th'));
 					}
-					if(isset($weather_time))
+					$ndata = count($tbl->find('tr', 2)->find('td'));
+					if($ndata == 0)
 					{
-						if(is_array($weather_time))
+						$ndata = count($tbl->find('tr', 2)->find('th'));
+					}
+					
+					$weather_time[$day] = array();
+					if($ndata != 0)
+					{
+						foreach($tbl->find('tr', 1)->find('th') as $key=>$val)
 						{
-							foreach($weather_time as $k=>$v)
+							$weather_time[$day][] = str_replace(
+								array('pagi', 'siang', 'malam', 'dini_hari'), 
+								array('morning', 'daylight', 'night', 'dawn'), 
+								strtolower(str_replace(" ", "_", trim($val->innertext))));
+							if(@$weather_time[$day][$key] == "")
 							{
-								if(@$weather_time[$k] == "")
+								$weather_time[$day][$key] = "weather".$key;
+							}
+						}
+						if(isset($weather_time[$day]))
+						{
+							if(is_array($weather_time[$day]))
+							{
+								foreach($weather_time[$day] as $k=>$v)
 								{
-									$weather_time[$key] = "weather".$k;
+									if(@$weather_time[$day][$k] == "")
+									{
+										$weather_time[$day][$key] = "weather".$k;
+									}
 								}
+							}
+							else
+							{
+								$weather_time[$day] = array();
+								$weather_time[$day][0] = "weather0";
 							}
 						}
 						else
 						{
-							$weather_time = array();
-							$weather_time[0] = "weather0";
+							$weather_time[$day] = array();
+							$weather_time[$day][0] = "weather0";
 						}
 					}
 					else
 					{
-						$weather_time = array();
-						$weather_time[0] = "weather0";
+						$nw = -3;
+						$xxx = 0;
+						foreach($tbl->find('tr', 1)->find('th') as $key=>$val)
+						{
+							$nw++;
+							$xxx++;
+						}
+						$weather_time[$day] = array();
+						
+						$cw[0] = "morning";
+						$cw[1] = "daylight";
+						$cw[2] = "night";
+						$cw[3] = "dawn";
+						
+						
+						$nweather[$day] = $nw;
+						for($i = 0, $j=count($cw)-$nw; $i<$nw; $i++, $j++)
+						{
+							$weather_time[$day][$i] = $cw[$j];
+						}
+	
 					}
 				}
-				else
+				$cw = array();
+				$cw[0] = "morning";
+				$cw[1] = "daylight";
+				$cw[2] = "night";
+				$cw[3] = "dawn";
+				foreach($weather_time as $day=>$val)
 				{
-					$nw = -2;
-					foreach($table[0]->find('tr', 1)->find('th') as $key=>$val)
+					if($val[0] == "kota")
 					{
-						$nw++;
+						$weather_time[$day] = array();
+						$nw = $nweather[$day];
+						$nc = count($cw);
+						for($i = 0, $j=$nc-$nw; $i<$nw; $i++, $j++)
+						{
+							$weather_time[$day][$i] = $cw[$j];
+						}
 					}
-					$weather_time = array();
-					
-					$cw[0] = "morning";
-					$cw[1] = "daylight";
-					$cw[2] = "afternoon";
-					$cw[3] = "night";
-					$cw[4] = "dawn";
-					
-					
-					$nweather = $nw;
-					for($i = 0, $j=count($cw)-$nw; $i<$nw; $i++, $j++)
-					{
-						$weather_time[$i] = $cw[$j];
-					}
-
 				}
+				
 				for($day = 0; $day < $idx; $day++)
 				{
 					$collection = array();
 					$collection['date'] = @$date[$day];
 					$collection['data'] = array();
+					
+					
 					foreach ($table[$day]->find('tr') as $i=>$tr) 
 					{
 						if($i > 1) 
@@ -465,9 +505,9 @@ class BMKG
 							if(strlen($city) > 1)
 							{
 								$weather = array();
-								for($xx = 0; $xx < $nweather; $xx++)
+								for($xx = 0; $xx < $nweather[$day]; $xx++)
 								{
-									$weather[$weather_time[$xx]] = strip_tags(@$tr->find('td', $xx+1)->innertext);
+									$weather[$weather_time[$day][$xx]] = strip_tags(@$tr->find('td', $xx+1)->innertext);
 								}
 								$temperature              = @$tr->find('td', $ndata-2)->innertext;
 								$temperature_minmax       = explode(" - ", @$temperature);
