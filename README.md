@@ -2,6 +2,8 @@
 
 BMKG API is an API to get realtime weather forecast and earthquake history from [BMKG | Badan Meteorologi, Klimatologi, dan Geofisika](http://www.bmkg.go.id).
 
+Caching can be implemented by saving responses to the database. The cache age can be set to one or several hours.
+
 ### Features
 
 - earthquake
