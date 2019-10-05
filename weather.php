@@ -6,7 +6,7 @@ $bmkg = new BMKG();
 
 $data = $bmkg->weather($province_id);
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+//header('Content-Type: application/json');
+//header('Access-Control-Allow-Origin: *');
 echo json_encode($data, JSON_PRETTY_PRINT);
 ?>

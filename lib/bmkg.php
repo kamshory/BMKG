@@ -509,21 +509,47 @@ class BMKG
 								{
 									$weather[$weather_time[$day][$xx]] = strip_tags(@$tr->find('td', $xx+1)->innertext);
 								}
-								$temperature              = @$tr->find('td', $ndata-2)->innertext;
-								$temperature_minmax       = explode(" - ", @$temperature);
-								$humidity        = @$tr->find('td', $ndata-1)->innertext;
-								$humidity_minmax = explode(" - ", @$humidity);
+								
+								// BMKG is inconsistent for this 
+								$temperature              = @$tr->find('td', $ndata-1)->innertext;
+								$temperature_minmax       = explode("-", @$temperature);
+								$humidity        = @$tr->find('td', $ndata)->innertext;
+								$humidity_minmax = explode("-", @$humidity);								
+								
+								$r_coordinates = @$location[str_replace(" ", "_", $city)];
+								$r_weather = @$weather;
+								$r_temp_min = strip_tags(@$temperature_minmax[0])*1;
+								$r_temp_max = strip_tags(@$temperature_minmax[1])*1;
+								$r_hum_min = strip_tags(@$humidity_minmax[0])*1;
+								$r_hum_max = strip_tags(str_replace(" %", "", @$humidity_minmax[1]))*1;
+
+								// check if humidity is valid
+								if($r_hum_min == 0 || $r_hum_max == 0)
+								{
+									$temperature              = @$tr->find('td', $ndata-2)->innertext;
+									$temperature_minmax       = explode("-", @$temperature);
+									$humidity        = @$tr->find('td', $ndata-1)->innertext;
+									$humidity_minmax = explode("-", @$humidity);								
+									
+									$r_coordinates = @$location[str_replace(" ", "_", $city)];
+									$r_weather = @$weather;
+									$r_temp_min = strip_tags(@$temperature_minmax[0])*1;
+									$r_temp_max = strip_tags(@$temperature_minmax[1])*1;
+									$r_hum_min = strip_tags(@$humidity_minmax[0])*1;
+									$r_hum_max = strip_tags(str_replace(" %", "", @$humidity_minmax[1]))*1;
+								}
+								
 								$cells            = array(
 									'city' => $city,
-									'coordinate'=> @$location[str_replace(" ", "_", $city)],
-									'weather' => @$weather,
+									'coordinate'=> $r_coordinates,
+									'weather' => $r_weather,
 									'temperature' => array(
-										'min' => strip_tags(@$temperature_minmax[0])*1,
-										'max' => strip_tags(@$temperature_minmax[1])*1
+										'min' => $r_temp_min,
+										'max' => $r_temp_max
 									),
 									'humidity' => array(
-										'min' => strip_tags(@$humidity_minmax[0])*1,
-										'max' => strip_tags(str_replace(" %", "", @$humidity_minmax[1]))*1
+										'min' => $r_hum_min,
+										'max' => $r_hum_max
 									)
 								);
 								$collection['data'][] = @$cells;
