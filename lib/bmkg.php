@@ -496,10 +496,9 @@ class BMKG
 					$collection['date'] = @$date[$day];
 					$collection['data'] = array();
 					
-					
 					foreach ($table[$day]->find('tr') as $i=>$tr) 
 					{
-						if($i > 1) 
+						if($i >= 0) 
 						{
 							$city = trim(strip_tags(@$tr->find('td', 0)->innertext, " \r\n\t "));
 							if(strlen($city) > 1)
