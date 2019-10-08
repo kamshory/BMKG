@@ -510,7 +510,7 @@ class BMKG
 									$weather[$weather_time[$day][$xx]] = strip_tags(@$tr->find('td', $xx+1)->innertext);
 								}
 								
-								// BMKG is inconsistent for this 
+								// Find column
 								$temperature              = @$tr->find('td', $ndata-1)->innertext;
 								$temperature_minmax       = explode("-", @$temperature);
 								$humidity        = @$tr->find('td', $ndata)->innertext;
@@ -524,11 +524,12 @@ class BMKG
 								$r_hum_max = strip_tags(str_replace(" %", "", @$humidity_minmax[1]))*1;
 
 								// check if humidity is valid
-								if($r_hum_min == 0 || $r_hum_max == 0)
+								$inc = 1;
+								while(($r_temp_min == 0 && $r_temp_max == 0) || ($r_hum_min == 0 && $r_hum_max == 0))
 								{
-									$temperature              = @$tr->find('td', $ndata-2)->innertext;
+									$temperature              = @$tr->find('td', $ndata-$inc)->innertext;
 									$temperature_minmax       = explode("-", @$temperature);
-									$humidity        = @$tr->find('td', $ndata-1)->innertext;
+									$humidity        = @$tr->find('td', ($ndata-$inc)+1)->innertext;
 									$humidity_minmax = explode("-", @$humidity);								
 									
 									$r_coordinates = @$location[str_replace(" ", "_", $city)];
@@ -537,7 +538,9 @@ class BMKG
 									$r_temp_max = strip_tags(@$temperature_minmax[1])*1;
 									$r_hum_min = strip_tags(@$humidity_minmax[0])*1;
 									$r_hum_max = strip_tags(str_replace(" %", "", @$humidity_minmax[1]))*1;
+									$inc++;
 								}
+								
 								
 								$cells            = array(
 									'city' => $city,
