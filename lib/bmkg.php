@@ -300,7 +300,7 @@ class BMKG
 		return $location;
     }
     
-    function weather($prov = null)
+    function weather($prov = null, $selected_city = null)
     {
 		$url = 'cuaca/prakiraan-cuaca-indonesia.bmkg';
 		if($prov !== null && $prov != "")
@@ -565,7 +565,36 @@ class BMKG
 			{
 			}
         }
-        return $result;
+		if($selected_city !== null)
+		{
+			$filtered = array();
+			$i = 0;
+			foreach($result['data'] as $i=>$data_at)
+			{
+				$filtered[$i] = array();
+				$filtered[$i]['date'] = $data_at['date'];
+				$filtered[$i]['data'] = array();
+				foreach($data_at['data'] as $j=>$data)
+				{
+					if($data['city'] == $selected_city)
+					{
+						$filtered[$i]['data'][] = $data;
+					}
+				}
+			}
+			$result_filtered = array(
+				'status' => 'success',
+				'view' => 'weather',
+    			'timestamp' => time(0),
+				'data'=>$filtered
+				);
+			
+	        return $result_filtered;
+		}
+		else
+		{
+	        return $result;
+		}
     }
     
     function earthquake()
