@@ -1507,7 +1507,6 @@ class simple_html_dom
 
 		// prepare
 		$this->prepare($str, $lowercase, $defaultBRText, $defaultSpanText);
-
 		// Per sourceforge http://sourceforge.net/tracker/?func=detail&aid=2949097&group_id=218559&atid=1044037
 		// Script tags removal now preceeds style tag removal.
 		// strip out <script> tags
@@ -2351,3 +2350,4 @@ class simple_html_dom
 		$this->load_file($args);
 	}
 }
+?>
